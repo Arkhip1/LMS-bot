@@ -1,2 +1,2 @@
 # LMS-bot
-This is my firth project for yandex lyceum. 
+This is my ершкв project for yandex lyceum. 
