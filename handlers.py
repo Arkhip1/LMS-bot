@@ -11,36 +11,32 @@ import keyboards as kbs
 router = Router()
 
 
-class Reminds(StatesGroup):
+class Reminds(StatesGroup):  # состояния для напоминаний
     remind1 = State()
     remind2 = State()
 
 
-class Register(StatesGroup):
+class Register(StatesGroup):  # состояния для пользователя
     name = State()
     age = State()
     fav_color = State()
 
 
-def send_message(message):
-    bot.send_message(message.chat.id, 'fsgdhdfs')
-
-
-@router.message(CommandStart())
+@router.message(CommandStart())  # Приветствие
 async def cmnd_strt(message: Message, state: FSMContext):
     await message.answer('Привет! Я помогу вам не забыть о важных событиях:) \nПриступим?')
     await state.set_state(Register.name)
     await message.answer('Введите своё имя')
 
 
-@router.message(Register.name)
+@router.message(Register.name)  # сбор данных о пользователе
 async def nm(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
     await state.set_state(Register.age)
     await message.answer('Введите свой возраст')
 
 
-@router.message(Register.age)
+@router.message(Register.age)  # сбор данных о пользователе
 async def ag(message: Message, state: FSMContext):
     await state.update_data(age=message.text)
     await state.set_state(Register.fav_color)
@@ -51,7 +47,7 @@ async def ag(message: Message, state: FSMContext):
 async def fc(message: Message, state: FSMContext):
     await state.update_data(fav_color=message.text)
     data = await state.get_data()
-    with open('data.txt', mode='w', encoding='utf8') as dt:
+    with open('data.txt', mode='w', encoding='utf8') as dt:  # запись данных в текстовый файл
         dt.write(f'Имя: {data["name"]}; Возраст: {data["age"]}; Любимый цвет: {data["fav_color"]}.')
         dt.close()
     await state.clear()
@@ -70,31 +66,29 @@ async def set_remind(message: Message, state: FSMContext):
     await state.clear()
 
 
-@router.message(F.text == '15 минут')
+@router.message(F.text == '15 минут')  # события при выборе времени величиной в 15 минут
 async def set_remind(message: Message, state: FSMContext):
     await message.answer('Заметка успешно создана! Напоминание произойдет через 15 минут')
     await state.set_state(Reminds.remind1)
     await message.answer('Какое напоминание создать?')
 
 
-@router.message(F.text == '1 час')
+@router.message(F.text == '1 час')  # события при выборе времени величиной в 1 час
 async def set_remind(message: Message, state: FSMContext):
     await message.answer('Заметка успешно создана! Напоминание произойдет через 1 час')
     await state.set_state(Reminds.remind1)
     await message.answer('Какое напоминание создать?')
 
 
-@router.message(F.text == '1 день')
+@router.message(F.text == '1 день')  # события при выборе времени величиной в 1 день
 async def set_remind(message: Message, state: FSMContext):
     await message.answer('Заметка успешно создана! Напоминание произойдет через 1 день')
     await state.set_state(Reminds.remind1)
     await message.answer('Какое напоминание создать?')
 
 
-@router.message(F.text == '1 неделя')
+@router.message(F.text == '1 неделя')  # события при выборе времени величиной в 1 неделю
 async def set_remind(message: Message, state: FSMContext):
     await message.answer('Заметка успешно создана! Напоминание произойдет через 1 неделю')
     await state.set_state(Reminds.remind1)
     await message.answer('Какое напоминание создать?')
-
-
